@@ -6,12 +6,13 @@ import java.util.regex.Pattern;
 
 public final class JsonParser {
     public static final String KEY_GROUP = "key";
-    public static final String VALUE_GROUP = "value";
+    public static final String STRING_GROUP = "string";
+    public static final String NUMBER_GROUP = "number";
     public static final String OBJECT_GROUP = "object";
     public static final String LIST_GROUP = "list";
     public static final String REGEX_DELIMETER_LIST_OBJECTS = "(?<=}),";
     private static Pattern JSON_PATTERN = Pattern.compile(
-            "[\"'](?<key>[\\w\\d]+)[\"']:\\s*(?:[\"']+(?<value>(?s).*?)[\"']+|(?<object>[{]+(?s).*?[}]+)|\\[(?<list>(?s).*?)])");
+            "[\"'](?<key>[\\w\\d]+)[\"']:\\s*(?:[\"']+(?<string>(?s).*?)[\"']+|(?<object>[{]+(?s).*?[}]+)|\\[(?<list>(?s).*?)]|(?<number>[\\w\\s-]*))");
 
     private JsonParser() {}
 
@@ -36,10 +37,16 @@ public final class JsonParser {
                 Map<String, Object> innerParams = new HashMap<>();
                 readJsonRecursively(matcher.group(OBJECT_GROUP), innerParams);
                 params.put(matcher.group(KEY_GROUP), innerParams);
+            } else if (isString(matcher)) {
+                params.put(matcher.group(KEY_GROUP), matcher.group(STRING_GROUP));
             } else {
-                params.put(matcher.group(KEY_GROUP), matcher.group(VALUE_GROUP));
+                params.put(matcher.group(KEY_GROUP), matcher.group(NUMBER_GROUP));
             }
         }
+    }
+
+    private static boolean isString(Matcher matcher) {
+        return matcher.group(STRING_GROUP) != null;
     }
 
     private static boolean isObjectGroup(Matcher matcher) {
@@ -58,7 +65,7 @@ public final class JsonParser {
                 joiner.add(String.format("\"%s\": %s", e.getKey(), jsonFrom((Map<String, Object>) e.getValue())));
             } else if (e.getValue() instanceof List<?>) {
                 StringJoiner listJoiner = new StringJoiner(", ");
-                for (Map<String, Object> object : (Map<String, Object>[]) e.getValue()) {
+                for (Map<String, Object> object : (List<Map<String, Object>>) e.getValue()) {
                     listJoiner.add(jsonFrom(object));
                 }
                 joiner.add(String.format("\"%s\": [%s]", e.getKey(), listJoiner));
@@ -66,9 +73,6 @@ public final class JsonParser {
                 joiner.add(String.format("\"%s\": \"%s\"", e.getKey(), e.getValue()));
             }
         }
-
-//        params.forEach((key, value) -> joiner.add(String.format("\"%s\": \"%s\"", key, value)));
-
         return String.format("{%s}", joiner);
     }
 }

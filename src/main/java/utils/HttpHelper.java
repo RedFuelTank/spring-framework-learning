@@ -15,7 +15,9 @@ public class HttpHelper {
         class Parser {
             public static void test(String data) {
                 Map<String, Object> params = readParams(data);
-                System.out.println(jsonFrom(params));
+                String returnJsonBody = jsonFrom(params);
+                Map<String, Object> returnParams = readParams(returnJsonBody);
+
             }
         }
 
