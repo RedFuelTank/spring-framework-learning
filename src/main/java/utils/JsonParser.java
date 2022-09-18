@@ -11,7 +11,7 @@ public final class JsonParser {
     public static final String OBJECT_GROUP = "object";
     public static final String LIST_GROUP = "list";
     public static final String REGEX_DELIMETER_LIST_OBJECTS = "(?<=}),";
-    private static Pattern JSON_PATTERN = Pattern.compile(
+    private static final Pattern JSON_PATTERN = Pattern.compile(
             "[\"'](?<key>[\\w\\d]+)[\"']:\\s*(?:[\"']+(?<string>(?s).*?)[\"']+|(?<object>[{]+(?s).*?[}]+)|\\[(?<list>(?s).*?)]|(?<number>[\\w\\s-]*))");
 
     private JsonParser() {}
