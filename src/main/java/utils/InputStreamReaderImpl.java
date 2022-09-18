@@ -1,6 +1,7 @@
 package utils;
 
 import java.io.*;
+import java.util.Scanner;
 import java.util.StringJoiner;
 
 public class InputStreamReaderImpl extends BufferedReader {
@@ -11,12 +12,11 @@ public class InputStreamReaderImpl extends BufferedReader {
     public static String readAll(InputStream inputStream) throws IOException {
         StringJoiner joiner;
 
-        try (InputStreamReaderImpl reader = new InputStreamReaderImpl(new InputStreamReader(inputStream))) {
+        try (Scanner reader = new Scanner(new InputStreamReader(inputStream))) {
             joiner = new StringJoiner("\n");
-            String line;
 
-            while ((line = reader.readLine()) != null) {
-                joiner.add(line);
+            while (reader.hasNext()) {
+                joiner.add(reader.next());
             }
         }
         return joiner.toString();

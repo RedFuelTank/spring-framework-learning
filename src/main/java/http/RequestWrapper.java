@@ -6,7 +6,7 @@ import utils.InputStreamReaderImpl;
 import java.io.IOException;
 
 public class RequestWrapper {
-    HttpServletRequest servletRequest;
+    private final HttpServletRequest servletRequest;
     public RequestWrapper(HttpServletRequest req) {
         this.servletRequest = req;
     }
