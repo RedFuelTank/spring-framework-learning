@@ -4,10 +4,14 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-public class ResponseWrapper {
+public final class ResponseService {
     private HttpServletResponse servletResponse;
-    public ResponseWrapper(HttpServletResponse resp) {
+    private ResponseService(HttpServletResponse resp) {
         this.servletResponse = resp;
+    }
+
+    public static ResponseService of(HttpServletResponse response) {
+        return new ResponseService(response);
     }
 
     public void generateHeaders() {

@@ -4,10 +4,8 @@ import java.io.*;
 import java.util.Scanner;
 import java.util.StringJoiner;
 
-public class InputStreamReaderImpl extends BufferedReader {
-    public InputStreamReaderImpl(Reader in) {
-        super(in);
-    }
+public final class StreamReader {
+    private StreamReader() {}
 
     public static String readAll(InputStream inputStream) throws IOException {
         StringJoiner joiner;

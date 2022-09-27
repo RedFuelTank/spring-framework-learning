@@ -4,6 +4,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Deprecated
 public final class JsonParser {
     public static final String KEY_GROUP = "key";
     public static final String STRING_GROUP = "string";
@@ -40,7 +41,7 @@ public final class JsonParser {
             } else if (isString(matcher)) {
                 params.put(matcher.group(KEY_GROUP), matcher.group(STRING_GROUP));
             } else {
-                params.put(matcher.group(KEY_GROUP), matcher.group(NUMBER_GROUP));
+                params.put(matcher.group(KEY_GROUP), Integer.valueOf(matcher.group(NUMBER_GROUP)));
             }
         }
     }
@@ -57,6 +58,7 @@ public final class JsonParser {
         return matcher.group(LIST_GROUP) != null;
     }
 
+    @Deprecated
     public static String jsonFrom(Map<String, Object> params) {
         StringJoiner joiner = new StringJoiner(", ");
 
@@ -69,8 +71,10 @@ public final class JsonParser {
                     listJoiner.add(jsonFrom(object));
                 }
                 joiner.add(String.format("\"%s\": [%s]", e.getKey(), listJoiner));
-            } else {
+            } else if (e.getValue() instanceof String) {
                 joiner.add(String.format("\"%s\": \"%s\"", e.getKey(), e.getValue()));
+            } else {
+                joiner.add(String.format("\"%s\": %s", e.getKey(), e.getValue()));
             }
         }
         return String.format("{%s}", joiner);
