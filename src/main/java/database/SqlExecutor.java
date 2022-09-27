@@ -13,7 +13,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class SqlExecutor {
-    private static final ConnectionInfo CONNECTION_INFO = ConnectionInfo.of(ApplicationProperties.getDataBaseUrl(),
+    private static final ConnectionInfo CONNECTION_INFO = ConnectionInfo.ofData(ApplicationProperties.getDataBaseUrl(),
             ApplicationProperties.getDataBaseUser(), ApplicationProperties.getDataBasePassword());
 
     private static final DataSource DATA_SOURCE = DataSourceProvider.getDataSource(CONNECTION_INFO);

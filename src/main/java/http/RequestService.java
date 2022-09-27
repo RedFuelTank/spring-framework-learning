@@ -11,7 +11,7 @@ public final class RequestService {
         this.servletRequest = req;
     }
 
-    public static RequestService of(HttpServletRequest request) {
+    public static RequestService ofData(HttpServletRequest request) {
         return new RequestService(request);
     }
 

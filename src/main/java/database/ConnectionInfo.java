@@ -12,9 +12,7 @@ public final class ConnectionInfo {
     private String dataBaseUser;
     private String dataBasePassword;
 
-    private ConnectionInfo() {}
-
-    public static ConnectionInfo of(String dataBaseUrl, String dataBaseUser, String dataBasePassword) {
+    public static ConnectionInfo ofData(String dataBaseUrl, String dataBaseUser, String dataBasePassword) {
         return new ConnectionInfo(dataBaseUrl, dataBaseUser, dataBasePassword);
     }
 }

@@ -5,12 +5,12 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public final class ResponseService {
-    private HttpServletResponse servletResponse;
+    private final HttpServletResponse servletResponse;
     private ResponseService(HttpServletResponse resp) {
         this.servletResponse = resp;
     }
 
-    public static ResponseService of(HttpServletResponse response) {
+    public static ResponseService ofData(HttpServletResponse response) {
         return new ResponseService(response);
     }
 

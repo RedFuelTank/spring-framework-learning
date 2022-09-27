@@ -21,15 +21,15 @@ public class OrdersServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        ResponseService responseService = ResponseService.of(resp);
-        RequestService requestService = RequestService.of(req);
+        RequestService requestService = RequestService.ofData(req);
 
 
         String contentType = Optional.ofNullable(req.getHeader("Content-Type")).orElse("application/json");
         Map<String, Object> params = new HashMap<>();
 
         if (contentType.equals("application/x-www-form-urlencoded")) {
-            for (Iterator<String> it = req.getParameterNames().asIterator(); it.hasNext(); ) {
+            Iterator<String> it = req.getParameterNames().asIterator();
+            while (it.hasNext()) {
                 String key = it.next();
                 params.put(key, req.getParameterValues(key)[0]);
             }
@@ -43,6 +43,8 @@ public class OrdersServlet extends HttpServlet {
                 new AbstractMap.SimpleEntry<>("id", orderDto.getId()),
                 HttpHelper.ContentType.JSON);
 
+        ResponseService responseService = ResponseService.ofData(resp);
+
         responseService.generateHeaders();
         responseService.send(responseBody);
     }
@@ -50,7 +52,7 @@ public class OrdersServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Optional<String> idParameter = Optional.ofNullable(req.getParameter("id"));
-        ResponseService responseService = ResponseService.of(resp);
+        ResponseService responseService = ResponseService.ofData(resp);
         Optional<String> acceptableFormat = Optional.ofNullable(req.getHeader("Accept"));
 
         HttpHelper.ContentType acceptType;
@@ -69,8 +71,8 @@ public class OrdersServlet extends HttpServlet {
                         break;
                     }
                     default:
-                        acceptType = (contentType.equals("application/x-www-form-urlencoded") ? HttpHelper.ContentType.URLENCODED
-                                : HttpHelper.ContentType.JSON);
+                        acceptType = contentType.equals("application/x-www-form-urlencoded") ? HttpHelper.ContentType.URLENCODED
+                                : HttpHelper.ContentType.JSON;
                         break;
                 }
             } else {

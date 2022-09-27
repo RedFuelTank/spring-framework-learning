@@ -20,16 +20,15 @@ public class OrdersFormServlet extends HttpServlet {
 
     @Override
     protected void doPost( HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        RequestService requestService = RequestService.of(req);
-        ResponseService responseService = ResponseService.of(resp);
-        Optional<String> acceptableFormat = Optional.ofNullable(req.getHeader("Accept"));
+        RequestService requestService = RequestService.ofData(req);
 
         Map<String, Object> params = new HashMap<>();
 
         String contentType = req.getHeader("Content-Type");
 
         if (contentType.equals("application/x-www-form-urlencoded")) {
-            for (Iterator<String> it = req.getParameterNames().asIterator(); it.hasNext(); ) {
+            Iterator<String> it = req.getParameterNames().asIterator();
+            while (it.hasNext()) {
                 String key = it.next();
                 params.put(key, req.getParameterValues(key)[0]);
             }
@@ -40,6 +39,7 @@ public class OrdersFormServlet extends HttpServlet {
         }
 
         HttpHelper.ContentType acceptType;
+        Optional<String> acceptableFormat = Optional.ofNullable(req.getHeader("Accept"));
 
         if (acceptableFormat.isPresent()) {
             switch (acceptableFormat.get()) {
@@ -53,8 +53,8 @@ public class OrdersFormServlet extends HttpServlet {
                     break;
                 }
                 default:
-                    acceptType = (contentType.equals("application/x-www-form-urlencoded") ? HttpHelper.ContentType.URLENCODED
-                            : HttpHelper.ContentType.JSON);
+                    acceptType = contentType.equals("application/x-www-form-urlencoded") ? HttpHelper.ContentType.URLENCODED
+                            : HttpHelper.ContentType.JSON;
                     break;
             }
         } else {
@@ -67,6 +67,8 @@ public class OrdersFormServlet extends HttpServlet {
 
         String responseBody = HttpHelper.injectParam(returnData,
                 new AbstractMap.SimpleEntry<>("id", orderDto.getId()), acceptType);
+
+        ResponseService responseService = ResponseService.ofData(resp);
 
         responseService.generateHeaders();
         responseService.send(responseBody);
