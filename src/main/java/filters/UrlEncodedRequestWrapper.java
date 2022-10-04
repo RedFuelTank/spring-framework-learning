@@ -11,8 +11,6 @@ import java.util.stream.Collectors;
 
 public class UrlEncodedRequestWrapper extends HttpServletRequestWrapper {
 
-    private BufferedReader reader;
-
     /**
      * Constructs a request object wrapping the given request.
      *
@@ -48,7 +46,6 @@ public class UrlEncodedRequestWrapper extends HttpServletRequestWrapper {
             String value = super.getParameter(parameter);
             entries.add(new AbstractMap.SimpleEntry<>(parameter, value));
         }
-        System.out.println(entries);
         return entries.stream().map(e -> e.getKey() + "=" + e.getValue()).collect(Collectors.joining("&"));
     }
 }

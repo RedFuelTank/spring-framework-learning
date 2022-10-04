@@ -25,13 +25,13 @@ public class OrdersFormServlet extends HttpServlet {
         RequestService requestService = RequestService.ofData(req);
 
         String body = requestService.getBody();
-        System.out.println(body);
 
-        OrderDto orderDto = ORDERS_REPOSITORY.save(new ObjectMapper().readValue(body, Map.class));
-        String responseBody = HttpHelper.injectParam(orderDto.getContent(),
-                new AbstractMap.SimpleEntry<>("id", orderDto.getId()),
-                HttpHelper.ContentType.JSON);
+        OrderDto orderDto = ORDERS_REPOSITORY.save(new ObjectMapper().readValue(body, OrderDto.class));
+//        String responseBody = HttpHelper.injectParam(orderDto.getContent(),
+//                new AbstractMap.SimpleEntry<>("id", orderDto.getId()),
+//                HttpHelper.ContentType.JSON);
 
-        resp.getWriter().println(responseBody);
+//        resp.getWriter().println(responseBody);
+        new ObjectMapper().writeValue(resp.getWriter(), orderDto);
     }
 }

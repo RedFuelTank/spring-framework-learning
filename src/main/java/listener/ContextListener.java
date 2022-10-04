@@ -1,3 +1,5 @@
+package listener;
+
 import database.ConnectionInfo;
 import database.DataSourceProvider;
 import jakarta.servlet.ServletContextEvent;
@@ -27,6 +29,5 @@ public class ContextListener implements ServletContextListener {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        System.out.println("Initialized");
     }
 }

@@ -15,7 +15,6 @@ public class ServletFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        System.out.println("Request: " + request.getContentType());
         HttpServletRequest servletRequest = (HttpServletRequest) request;
         HttpServletResponse servletResponse = (HttpServletResponse) response;
 
@@ -53,7 +52,10 @@ public class ServletFilter implements Filter {
                         .getResponseWrapperFor(servletResponse);
 
                 chain.doFilter(servletRequest, responseWrapper);
-
+                break;
+            default:
+                chain.doFilter(servletRequest, servletResponse);
+                break;
         }
 
 //        switch (request.getContentType()) {
@@ -82,7 +84,6 @@ public class ServletFilter implements Filter {
 //                responseWrapper.setHeader("Content-Type", "application/json");
 //        }
 
-        System.out.println("Response: " + response.getContentType());
     }
 
 

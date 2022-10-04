@@ -30,20 +30,19 @@ public class OrdersServlet extends HttpServlet {
         RequestService requestService = RequestService.ofData(req);
 
         String body = requestService.getBody();
-        System.out.println(body);
 
-        OrderDto orderDto = ORDERS_REPOSITORY.save(new ObjectMapper().readValue(body, Map.class));
-        String responseBody = HttpHelper.injectParam(orderDto.getContent(),
-                new AbstractMap.SimpleEntry<>("id", orderDto.getId()),
-                HttpHelper.ContentType.JSON);
+        OrderDto orderDto = ORDERS_REPOSITORY.save(new ObjectMapper().readValue(body, OrderDto.class));
+//        String responseBody = HttpHelper.injectParam(orderDto.getContent(),
+//                new AbstractMap.SimpleEntry<>("id", orderDto.getId()),
+//                HttpHelper.ContentType.JSON);
 
-        resp.getWriter().println(responseBody);
+        new ObjectMapper().writeValue(resp.getWriter(), orderDto);
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Optional<String> idParameter = Optional.ofNullable(req.getParameter("id"));
-        ResponseService responseService = ResponseService.ofData(resp);
+//        ResponseService responseService = ResponseService.ofData(resp);
 //        Optional<String> acceptableFormat = Optional.ofNullable(req.getHeader("Accept"));
 
 //        HttpHelper.ContentType acceptType;
@@ -71,11 +70,11 @@ public class OrdersServlet extends HttpServlet {
 //            }
             OrderDto orderDto = ORDERS_REPOSITORY.getById(idParameter.get());
 
-            String responseBody = HttpHelper.injectParam(orderDto.getContent(),
-                    new AbstractMap.SimpleEntry<>("id", orderDto.getId()),
-                    HttpHelper.ContentType.JSON);
+//            String responseBody = HttpHelper.injectParam(orderDto.getContent(),
+//                    new AbstractMap.SimpleEntry<>("id", orderDto.getId()),
+//                    HttpHelper.ContentType.JSON);
 
-            responseService.send(responseBody);
+            new ObjectMapper().writeValue(resp.getWriter(), orderDto);
         } else {
             List<OrderDto> orderDtos = ORDERS_REPOSITORY.getAll();
 

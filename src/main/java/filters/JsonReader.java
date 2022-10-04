@@ -8,9 +8,4 @@ public class JsonReader extends BufferedReader {
     public JsonReader(BufferedReader in) {
         super(in);
     }
-
-    @Override
-    public Stream<String> lines() {
-        return super.lines();
-    }
 }

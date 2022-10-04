@@ -9,5 +9,5 @@ import lombok.Setter;
 @NoArgsConstructor
 public class OrderDto {
     private Long id;
-    private String content;
+    private String orderNumber;
 }

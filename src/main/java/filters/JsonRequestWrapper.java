@@ -17,10 +17,4 @@ public class JsonRequestWrapper extends HttpServletRequestWrapper {
     public JsonRequestWrapper(HttpServletRequest request) {
         super(request);
     }
-
-
-    @Override
-    public BufferedReader getReader() throws IOException {
-        return super.getReader();
-    }
 }

@@ -21,9 +21,9 @@ public class OrdersRepository {
 
     private static final DataSource DATA_SOURCE = DataSourceProvider.getDataSource(CONNECTION_INFO);
 
-    public OrderDto save(Map<String, Object> params) {
-        String query = String.format("INSERT INTO orders (content) VALUES ('%s') RETURNING *",
-                HttpHelper.writeParamsAsString(params, HttpHelper.ContentType.JSON));
+    public OrderDto save(OrderDto dto) {
+        String query = String.format("INSERT INTO orders (orderNumber) VALUES ('%s') RETURNING *",
+                dto.getOrderNumber());
         return SqlExecutor.executeQuery(query, OrderDto.class);
     }
 
@@ -41,7 +41,7 @@ public class OrdersRepository {
             while (resultSet.next()) {
                 OrderDto orderDto = new OrderDto();
                 orderDto.setId(resultSet.getLong("id"));
-                orderDto.setContent(resultSet.getString("content"));
+                orderDto.setOrderNumber(resultSet.getString("orderNumber"));
                 list.add(orderDto);
             }
             return list;
