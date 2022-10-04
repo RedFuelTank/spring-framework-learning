@@ -15,17 +15,15 @@ import java.io.IOException;
 import java.util.AbstractMap;
 import java.util.Map;
 
-@WebServlet("orders/form")
-public class OrdersFormServlet extends HttpServlet {
-    //TODO: Filter needs to work
+@WebServlet("/test")
+public class TestServlet extends HttpServlet {
     private static final OrdersRepository ORDERS_REPOSITORY = new OrdersRepository();
 
     @Override
-    protected void doPost( HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         RequestService requestService = RequestService.ofData(req);
 
         String body = requestService.getBody();
-        System.out.println(body);
 
         OrderDto orderDto = ORDERS_REPOSITORY.save(new ObjectMapper().readValue(body, Map.class));
         String responseBody = HttpHelper.injectParam(orderDto.getContent(),

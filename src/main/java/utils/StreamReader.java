@@ -1,8 +1,12 @@
 package utils;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Scanner;
 import java.util.StringJoiner;
+import java.util.stream.Collectors;
 
 public final class StreamReader {
     private StreamReader() {}
@@ -18,5 +22,9 @@ public final class StreamReader {
             }
         }
         return joiner.toString();
+    }
+
+    public static String readAll(BufferedReader inputStream) throws IOException {
+        return inputStream.lines().collect(Collectors.joining("\n"));
     }
 }

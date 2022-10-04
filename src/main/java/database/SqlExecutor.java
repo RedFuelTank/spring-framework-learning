@@ -1,16 +1,18 @@
 package database;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.units.qual.A;
 import utils.ApplicationProperties;
 
 import javax.sql.DataSource;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SqlExecutor {
     private static final ConnectionInfo CONNECTION_INFO = ConnectionInfo.ofData(ApplicationProperties.getDataBaseUrl(),
@@ -22,6 +24,7 @@ public class SqlExecutor {
         try (Connection connection = DATA_SOURCE.getConnection();
              Statement statement = connection.createStatement()) {
             ResultSet set = statement.executeQuery(query);
+
             if (set != null) {
                 set.next();
                 return castResultSetTo(set, object);

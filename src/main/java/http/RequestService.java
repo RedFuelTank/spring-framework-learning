@@ -16,6 +16,6 @@ public final class RequestService {
     }
 
     public String getBody() throws IOException {
-        return StreamReader.readAll(servletRequest.getInputStream());
+        return StreamReader.readAll(servletRequest.getReader());
     }
 }

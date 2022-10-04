@@ -1,12 +1,13 @@
 package database;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ConnectionInfo {
     private String dataBaseUrl;
     private String dataBaseUser;
