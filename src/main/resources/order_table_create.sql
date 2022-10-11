@@ -1,11 +1,27 @@
-DROP TABLE IF EXISTS orders;
+DROP TABLE IF EXISTS orders CASCADE;
 
-DROP SEQUENCE IF EXISTS ordersid;
+DROP SEQUENCE IF EXISTS ordersId CASCADE;
 
-CREATE SEQUENCE ordersid START WITH 1;
+CREATE SEQUENCE ordersId START WITH 1;
 
 CREATE TABLE orders
 (
     id          BIGINT NOT NULL PRIMARY KEY DEFAULT nextval('ordersId'),
     orderNumber VARCHAR(255)
+);
+
+DROP TABLE IF EXISTS items;
+
+DROP SEQUENCE IF EXISTS itemsId;
+
+CREATE SEQUENCE itemsId START WITH 1;
+
+CREATE TABLE items
+(
+    id          BIGINT NOT NULL PRIMARY KEY DEFAULT nextval('itemsId'),
+    orderId     BIGINT NOT NULL,
+    itemName VARCHAR(255),
+    quantity BIGINT,
+    price BIGINT,
+    CONSTRAINT fk_order_id FOREIGN KEY (orderId) REFERENCES orders(id) ON DELETE CASCADE
 )
