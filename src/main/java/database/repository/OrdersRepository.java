@@ -1,141 +1,72 @@
 package database.repository;
 
-import database.ConnectionInfo;
-import database.DataSourceProvider;
 import model.OrderDto;
-import utils.ApplicationProperties;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.stereotype.Repository;
 
-import javax.sql.DataSource;
-import java.sql.*;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+@Repository
 public class OrdersRepository {
-    private static final ConnectionInfo CONNECTION_INFO = ConnectionInfo.ofData(ApplicationProperties.getDataBaseUrl(),
-            ApplicationProperties.getDataBaseUser(), ApplicationProperties.getDataBasePassword());
+    // TODO: Validation
+    private final JdbcTemplate jdbcTemplate;
 
-    private static final DataSource DATA_SOURCE = DataSourceProvider.getDataSource(CONNECTION_INFO);
+    public OrdersRepository(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public OrderDto save(OrderDto dto) {
+        MapSqlParameterSource orderSqlParameters = new MapSqlParameterSource();
+        orderSqlParameters.addValue("ordernumber", dto.getOrderNumber());
 
-        String orderQuery = "INSERT INTO orders (orderNumber) VALUES (?) RETURNING *";
+        Long id = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("orders")
+                .usingGeneratedKeyColumns("id").executeAndReturnKey(orderSqlParameters).longValue();
 
-        String itemQuery = "INSERT INTO items(orderid, itemname, quantity, price) VALUES (?, ?, ?, ?)";
+        if (dto.getOrderRows() != null) {
+            var items = dto.getOrderRows().stream()
+                    .map(item -> {
+                        MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+                        parameterSource.addValue("itemname", item.getItemName());
+                        parameterSource.addValue("price", item.getPrice());
+                        parameterSource.addValue("quantity", item.getQuantity());
+                        parameterSource.addValue("orderid", id);
+                        return parameterSource;
+                    }).toArray(SqlParameterSource[]::new);
 
-        try (Connection connection = DATA_SOURCE.getConnection();
-             PreparedStatement orderStatement = connection.prepareStatement(orderQuery);
-             PreparedStatement itemStatement = connection.prepareStatement(itemQuery)) {
-            orderStatement.setString(1, dto.getOrderNumber());
-            ResultSet set = orderStatement.executeQuery();
-
-            if (set != null) {
-                set.next();
-                dto.setId(set.getLong("id"));
-
-                connection.setAutoCommit(false);
-
-                if (dto.getOrderRows() != null) {
-                    for (OrderDto.Item item : dto.getOrderRows()) {
-                        itemStatement.setLong(1,dto.getId());
-                        itemStatement.setString(2, item.getItemName());
-                        itemStatement.setInt(3, item.getQuantity());
-                        itemStatement.setInt(4, item.getPrice());
-                        itemStatement.addBatch();
-                    }
-
-                    itemStatement.executeBatch();
-                    connection.commit();
-                }
-
-                return dto;
-            }
-
-            throw new IllegalArgumentException();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+            new SimpleJdbcInsert(jdbcTemplate).withTableName("items").usingGeneratedKeyColumns("id").executeBatch(items);
         }
+
+        dto.setId(id);
+
+        return dto;
     }
 
     public OrderDto getById(Long id) {
-        String query = String.format("SELECT * FROM orders WHERE id = '%s'", id);
+        String orderById = "SELECT orders.*, i.id as itemid, i.itemname, i.quantity, i.price " +
+                "FROM orders LEFT JOIN items i on orders.id = i.orderid WHERE orders.id = ?";
 
-        String items = String.format("SELECT * FROM items WHERE orderid = '%s'", id);
-
-        try (Connection connection = DATA_SOURCE.getConnection();
-             Statement statement = connection.createStatement()) {
-            ResultSet resultSet = statement.executeQuery(String.format(query, id));
-
-            if (resultSet.next()) {
-                OrderDto orderDto = new OrderDto();
-                orderDto.setId(resultSet.getLong("id"));
-                orderDto.setOrderNumber(resultSet.getString("orderNumber"));
-
-                ResultSet itemsSet = statement.executeQuery(items);
-
-                while (itemsSet.next()) {
-                    OrderDto.Item item = new OrderDto.Item();
-                    item.setItemName(itemsSet.getString("itemName"));
-                    item.setQuantity(itemsSet.getInt("quantity"));
-                    item.setPrice(itemsSet.getInt("price"));
-                    if (orderDto.getOrderRows() == null) {
-                        orderDto.setOrderRows(new ArrayList<>());
-                    }
-                    orderDto.getOrderRows().add(item);
-                }
-                return orderDto;
-            }
-
-            throw new IllegalArgumentException();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
+        return jdbcTemplate.query(orderById, new OrderDto.OrdersResultSetExtractor(), id)
+                .get(0);
     }
 
     public List<OrderDto> getAll() {
-        try (Connection connection = DATA_SOURCE.getConnection();
-             Statement orderStatement = connection.createStatement();
-             Statement itemStatement = connection.createStatement()) {
-            ResultSet resultSet = orderStatement.executeQuery("SELECT * FROM orders");
-            List<OrderDto> list = new ArrayList<>();
+        String orders = "SELECT orders.*, i.id as itemid, i.itemname, i.quantity, i.price " +
+                "FROM orders LEFT JOIN items i on orders.id = i.orderid";
 
-            while (resultSet.next()) {
-                OrderDto orderDto = new OrderDto();
-                orderDto.setId(resultSet.getLong("id"));
-                orderDto.setOrderNumber(resultSet.getString("orderNumber"));
-
-                ResultSet items = itemStatement.executeQuery(String.format("SELECT * FROM items WHERE orderid = %s",
-                        orderDto.getId()));
-//                System.out.println(items);
-
-                while (items.next()) {
-                    OrderDto.Item item = new OrderDto.Item();
-                    item.setItemName(items.getString("itemName"));
-                    item.setQuantity(items.getInt("quantity"));
-                    item.setPrice(items.getInt("price"));
-                    if (orderDto.getOrderRows() == null) {
-                        orderDto.setOrderRows(new ArrayList<>());
-                    }
-                    orderDto.getOrderRows().add(item);
-                }
-
-                list.add(orderDto);
-            }
-            return list;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        return jdbcTemplate.query(orders, new OrderDto.OrdersResultSetExtractor());
     }
 
     public void deleteById(Long id) {
-        String query = "DELETE FROM orders WHERE id = %s";
+        String query = "DELETE FROM orders WHERE id = ?";
 
-        try (Connection connection = DATA_SOURCE.getConnection();
-             Statement statement = connection.createStatement()) {
-            statement.executeUpdate(String.format(query, id));
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        jdbcTemplate.update(query, id);
 
     }
 }

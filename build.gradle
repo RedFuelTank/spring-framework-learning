@@ -18,28 +18,66 @@ repositories {
 }
 
 dependencies {
+    def hsqlVersion = '2.7.0'
+    def junitVersion = '5.9.0'
+    def servletApiVersion = "5.0.0"
+    def googleGuavaVersion = '31.1-jre'
+    def jacksonVersion = '2.14.0-rc1'
+    def lombokVersion = '1.18.24'
+    def postgresqlDriverVersion = '42.5.0'
+    def springJdbcVersion = '5.3.23'
+    def dbcp2Version = '2.9.0'
+    def lang3Version = '3.12.0'
+    def springContextVersion = '5.3.23'
+
     // Use JUnit Jupiter for testing.
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.0'
+
+    testImplementation "org.junit.jupiter:junit-jupiter:$junitVersion"
 
     // This dependency is used by the application.
-    implementation 'com.google.guava:guava:31.1-jre'
 
-    compileOnly 'jakarta.servlet:jakarta.servlet-api:5.0.0'
+    implementation "com.google.guava:guava:$googleGuavaVersion"
 
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.4'
+    compileOnly "jakarta.servlet:jakarta.servlet-api:$servletApiVersion"
 
-    compileOnly 'org.projectlombok:lombok:1.18.24'
-    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+    implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+
 
     implementation group: 'org.apache.commons',
             name: 'commons-dbcp2',
-            version: '2.9.0'
+            version: dbcp2Version
+
+
+    implementation 'org.apache.commons:commons-lang3:' + lang3Version
+
+
+    // Lombok
+    compileOnly "org.projectlombok:lombok:$lombokVersion"
+
+    annotationProcessor "org.projectlombok:lombok:$lombokVersion"
+
+
+    // Spring
+
+    implementation group: 'org.springframework',
+            name: 'spring-context',
+            version: springContextVersion
+
+
+    implementation group: 'org.springframework',
+            name: 'spring-jdbc',
+            version: springJdbcVersion
+
+
+    // Drivers
 
     implementation group: 'org.postgresql',
             name: 'postgresql',
-            version: '42.5.0'
+            version: postgresqlDriverVersion
 
-    implementation 'org.apache.commons:commons-lang3:3.12.0'
+    implementation group: 'org.hsqldb',
+            name: 'hsqldb',
+            version: hsqlVersion
 
 }
 
