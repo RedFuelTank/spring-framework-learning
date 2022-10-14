@@ -18,8 +18,8 @@ public class ContextListener implements ServletContextListener {
     public void contextInitialized(ServletContextEvent sce) {
         var ctx = new AnnotationConfigApplicationContext(
                 Config.class,
-//                HsqlDatabaseConfig.class
-                PostgresqlDatabaseConfig.class
+                HsqlDatabaseConfig.class
+//                PostgresqlDatabaseConfig.class
         );
 
         ServletRegistration registration = sce.getServletContext().addServlet("orders-servlet", ctx.getBean(OrdersServlet.class));

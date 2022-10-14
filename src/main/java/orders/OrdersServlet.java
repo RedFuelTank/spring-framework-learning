@@ -2,6 +2,8 @@ package orders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import database.repository.OrdersRepository;
+import exceptions.ValidationError;
+import handlers.ValidationErrors;
 import http.RequestService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -31,6 +33,15 @@ public class OrdersServlet extends HttpServlet {
         String body = requestService.getBody();
 
         OrderDto orderDto = ordersRepository.save(new ObjectMapper().readValue(body, OrderDto.class));
+
+        if (orderDto.getOrderNumber().length() < 2) {
+            ValidationErrors errors = new ValidationErrors();
+            errors.setErrors(List.of(new ValidationError()));
+            resp.setStatus(400);
+
+            new ObjectMapper().writeValue(resp.getWriter(), errors);
+            return;
+        }
 
         new ObjectMapper().writeValue(resp.getWriter(), orderDto);
     }
