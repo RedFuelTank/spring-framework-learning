@@ -25,8 +25,6 @@ public class PostgresqlDatabaseConfig {
 
     @Bean
     public DataSource dataSource() {
-        System.out.println("Postgresql");
-
         BasicDataSource ds = new BasicDataSource();
         ds.setDriverClassName("org.postgresql.Driver");
         ds.setUsername(env.getProperty("dbUser"));

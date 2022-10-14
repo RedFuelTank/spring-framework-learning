@@ -29,7 +29,7 @@ public class OrderDto {
 
     public static class OrdersResultSetExtractor implements ResultSetExtractor<List<OrderDto>>{
         @Override
-        public List<OrderDto> extractData(ResultSet rs) throws SQLException, DataAccessException {
+        public List<OrderDto> extractData(ResultSet rs) throws SQLException {
             Map<Long, OrderDto> orderDtoById = new HashMap<>();
 
             while (rs.next()) {

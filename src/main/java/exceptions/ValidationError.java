@@ -1,9 +1,8 @@
 package exceptions;
 
-public class ValidationError {
-    final String code = "too_short_number";
+import lombok.Getter;
 
-    public String getCode() {
-        return code;
-    }
+@Getter
+public class ValidationError {
+    private String code = "too_short_number";
 }

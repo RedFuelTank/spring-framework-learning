@@ -24,8 +24,6 @@ public class HsqlDatabaseConfig {
 
     @Bean
     public DataSource dataSource() {
-        System.out.println("Hsql");
-
         BasicDataSource ds = new BasicDataSource();
         ds.setDriverClassName("org.hsqldb.jdbcDriver");
         ds.setUrl(env.getProperty("hsql.url"));
