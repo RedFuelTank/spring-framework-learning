@@ -1,8 +1,18 @@
 package exceptions;
 
-import lombok.Getter;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.*;
+
+import java.util.List;
 
 @Getter
+@AllArgsConstructor
+@RequiredArgsConstructor
+@NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ValidationError {
-    private String code = "too_short_number";
+    @NonNull
+    private String code;
+
+    private List<String> arguments;
 }

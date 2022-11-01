@@ -1,8 +1,10 @@
 package model;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 
 import java.sql.ResultSet;
@@ -16,14 +18,22 @@ import java.util.Map;
 @Getter
 public class OrderDto {
     private Long id;
+    @NotNull
     private String orderNumber;
+    @Valid
     private List<Item> orderRows;
 
     @Setter
     @Getter
     public static class Item {
         private String itemName;
+
+        @NotNull
+        @Min(1)
         private int quantity;
+
+        @NotNull
+        @Min(1)
         private int price;
     }
 

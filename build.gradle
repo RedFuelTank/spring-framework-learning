@@ -15,6 +15,7 @@ plugins {
 repositories {
     // Use Maven Central for resolving dependencies.
     mavenCentral()
+    maven { url "https://repo.spring.io/milestone/" }
 }
 
 dependencies {
@@ -25,10 +26,12 @@ dependencies {
     def jacksonVersion = '2.14.0-rc1'
     def lombokVersion = '1.18.24'
     def postgresqlDriverVersion = '42.5.0'
-    def springJdbcVersion = '5.3.23'
+    def springJdbcVersion = '6.0.0-RC1'
     def dbcp2Version = '2.9.0'
     def lang3Version = '3.12.0'
-    def springContextVersion = '5.3.23'
+    def springContextVersion = '6.0.0-RC1'
+    def springMvcVersion = "6.0.0-RC1"
+    def hibernateValidatorVersion = '8.0.0.Final'
 
     // Use JUnit Jupiter for testing.
 
@@ -42,13 +45,13 @@ dependencies {
 
     implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
 
-
     implementation group: 'org.apache.commons',
             name: 'commons-dbcp2',
             version: dbcp2Version
 
+    implementation "org.apache.commons:commons-lang3:$lang3Version"
 
-    implementation 'org.apache.commons:commons-lang3:' + lang3Version
+    implementation "org.hibernate:hibernate-validator:$hibernateValidatorVersion"
 
 
     // Lombok
@@ -67,6 +70,9 @@ dependencies {
     implementation group: 'org.springframework',
             name: 'spring-jdbc',
             version: springJdbcVersion
+
+
+    implementation "org.springframework:spring-webmvc:$springMvcVersion"
 
 
     // Drivers

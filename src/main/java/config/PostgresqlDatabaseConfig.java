@@ -14,6 +14,7 @@ import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import javax.sql.DataSource;
 
 @Configuration
+@Profile("postgresql")
 @PropertySource("classpath:/application.properties")
 public class PostgresqlDatabaseConfig {
 

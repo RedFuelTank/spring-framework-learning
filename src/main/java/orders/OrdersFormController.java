@@ -8,11 +8,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/test")
-public class TestServlet {
+@RequestMapping("/orders/form")
+public class OrdersFormController {
+    //TODO: Filter needs to work
     private OrdersRepository ordersRepository;
 
-    public TestServlet(OrdersRepository ordersRepository) {
+    public OrdersFormController(OrdersRepository ordersRepository) {
         this.ordersRepository = ordersRepository;
     }
 
