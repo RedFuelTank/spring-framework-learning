@@ -1,3 +1,5 @@
+package starter;
+
 import config.Config;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
