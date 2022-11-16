@@ -1,6 +1,6 @@
 package orders;
 
-import database.repository.OrdersRepository;
+import database.OrdersRepository;
 import model.OrderDto;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,8 +16,8 @@ public class TestServlet {
         this.ordersRepository = ordersRepository;
     }
 
-    @PostMapping()
-    protected OrderDto save(@RequestBody OrderDto orderDto) {
-        return ordersRepository.save(orderDto);
-    }
+//    @PostMapping()
+//    protected OrderDto save(@RequestBody OrderDto orderDto) {
+//        return ordersRepository.save(orderDto);
+//    }
 }

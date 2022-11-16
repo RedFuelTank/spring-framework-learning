@@ -1,51 +1,47 @@
-package database.repository;
+package database;
 
-import jakarta.persistence.*;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import model.OrderDto;
 import org.springframework.core.annotation.Order;
 import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
-public interface OrdersRepository extends CrudRepository<OrderDto, Long> {
-//    @PersistenceContext
-//    private EntityManager entityManager;
-//
-//    @Transactional
-//    public OrderDto save(OrderDto dto) {
-//        if (dto.getId() == null) {
-//            entityManager.persist(dto);
-//        } else {
-//            entityManager.merge(dto);
-//        }
-//        return dto;
-//    }
+public class OrdersRepository {
+    @PersistenceContext
+    private EntityManager entityManager;
 
-//    public OrderDto getById(Long id) {
-//        String orderById = "SELECT orders.*, i.id as itemid, i.itemname, i.quantity, i.price " +
-//                "FROM orders LEFT JOIN items i on orders.id = i.orderid WHERE orders.id = ?";
-//
-//        return jdbcTemplate.query(orderById, new OrderDto.OrdersResultSetExtractor(), id)
-//                .get(0);
-//    }
-//
-//    @Transactional(readOnly = true)
-//    public List<OrderDto> getAll() {
-//        TypedQuery<OrderDto> query = entityManager.createQuery("select u from OrderDto u WHERE true", OrderDto.class);
-//        return query.getResultList();
-//    }
-//
-//    public void deleteById(Long id) {
-//        String query = "DELETE FROM orders WHERE id = ?";
-//
-//        jdbcTemplate.update(query, id);
-//
-//    }
+    @Transactional
+    public OrderDto save(OrderDto dto) {
+        entityManager.persist(dto);
+        return dto;
+    }
+
+    @Transactional
+    public Optional<OrderDto> getById(Long id) {
+        OrderDto orderDto = entityManager.find(OrderDto.class, id);
+        return Optional.ofNullable(orderDto);
+    }
+
+    @Transactional
+    public List<OrderDto> getAll() {
+        TypedQuery<OrderDto> query = entityManager.createQuery("select u from OrderDto u WHERE true", OrderDto.class);
+        return query.getResultList();
+    }
+
+    @Transactional
+    @Modifying
+    public void deleteById(Long id) {
+        OrderDto orderDto = entityManager.find(OrderDto.class, id);
+        if (orderDto != null) {
+            entityManager.remove(orderDto);
+        }
+    }
 }

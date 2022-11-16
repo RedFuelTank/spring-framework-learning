@@ -32,6 +32,7 @@ dependencies {
     def springContextVersion = '6.0.0-RC1'
     def springMvcVersion = "6.0.0-RC1"
     def hibernateValidatorVersion = '8.0.0.Final'
+    def springJpaVersion = '2.7.5'
 
     // Use JUnit Jupiter for testing.
 
@@ -66,6 +67,10 @@ dependencies {
             name: 'spring-context',
             version: springContextVersion
 
+    implementation group: 'org.springframework',
+            name: 'spring-orm',
+            version: springContextVersion
+
 
     implementation group: 'org.springframework',
             name: 'spring-jdbc',
@@ -85,6 +90,9 @@ dependencies {
             name: 'hsqldb',
             version: hsqlVersion
 
+    implementation 'org.hibernate:hibernate-core:6.1.5.Final'
+
+    implementation 'org.springframework.data:spring-data-jpa:2.7.5'
 }
 
 application {

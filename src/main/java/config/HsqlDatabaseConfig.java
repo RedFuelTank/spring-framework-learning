@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.jdbc.datasource.init.DatabasePopulatorUtils;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 
@@ -30,14 +29,17 @@ public class HsqlDatabaseConfig {
         ds.setMaxTotal(3);
         ds.setInitialSize(1);
 
-        var populator = new ResourceDatabasePopulator(
-                new ClassPathResource("order_table_create.sql")
-        );
-
-        DatabasePopulatorUtils.execute(populator, ds);
-
+//        var populator = new ResourceDatabasePopulator(
+//                new ClassPathResource("order_table_create.sql")
+//        );
+//
+//        DatabasePopulatorUtils.execute(populator, ds);
 
         return ds;
     }
 
+    @Bean(name = "dialect")
+    public String getDialect() {
+        return "org.hibernate.dialect.HSQLDialect";
+    }
 }
