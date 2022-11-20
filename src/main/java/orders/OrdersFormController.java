@@ -17,8 +17,8 @@ public class OrdersFormController {
         this.ordersRepository = ordersRepository;
     }
 
-//    @PostMapping()
-//    protected OrderDto save(@RequestBody OrderDto orderDto) {
-//        return ordersRepository.save(orderDto);
-//    }
+    @PostMapping()
+    protected OrderDto save(@RequestBody OrderDto orderDto) {
+        return ordersRepository.save(orderDto);
+    }
 }
