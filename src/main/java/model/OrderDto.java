@@ -25,12 +25,14 @@ public class OrderDto {
 
     @Valid
     @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "order_rows")
+    @CollectionTable(name = "order_rows",
+    joinColumns = {@JoinColumn(name = "orders_id")})
     private List<Item> orderRows;
 
     @Data
     @Embeddable
     public static class Item {
+        @Column(name = "item_name")
         private String itemName;
 
         @NotNull

@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -30,6 +32,9 @@ public class Config {
 
     @Bean
     public EntityManagerFactory getEntityManager(DataSource dataSource, @Qualifier("dialect") String dialect) {
+        ResourceDatabasePopulator populator = new ResourceDatabasePopulator(new ClassPathResource("schema.sql"));
+        populator.execute(dataSource);
+
         LocalContainerEntityManagerFactoryBean manager = new LocalContainerEntityManagerFactoryBean();
         manager.setPersistenceProviderClass(HibernatePersistenceProvider.class);
         manager.setDataSource(dataSource);
@@ -41,7 +46,7 @@ public class Config {
 
     private Properties additionalProperties(String dialect) {
         Properties properties = new Properties();
-        properties.setProperty("hibernate.hbm2ddl.auto", "create");
+        properties.setProperty("hibernate.hbm2ddl.auto", "validate");
         properties.setProperty("hibernate.dialect", dialect);
         properties.setProperty("hibernate.show_sql", "true");
         return properties;
