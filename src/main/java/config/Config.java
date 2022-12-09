@@ -20,7 +20,7 @@ import java.util.Properties;
 @Configuration
 @EnableWebMvc
 @EnableTransactionManagement
-@ComponentScan(basePackages = {"orders", "model", "database", "config"})
+@ComponentScan(basePackages = {"orders", "model", "database", "config", "handlers"})
 public class Config {
     @Bean
     public EntityManagerFactory getEntityManager(DataSource dataSource, @Qualifier("dialect") String dialect) {

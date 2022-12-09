@@ -19,20 +19,21 @@ repositories {
 }
 
 dependencies {
-    def hsqlVersion = '2.7.0'
+    def hsqlVersion = '2.7.1'
     def junitVersion = '5.9.0'
     def servletApiVersion = "5.0.0"
     def googleGuavaVersion = '31.1-jre'
     def jacksonVersion = '2.14.0-rc1'
     def lombokVersion = '1.18.24'
-    def postgresqlDriverVersion = '42.5.0'
-    def springJdbcVersion = '6.0.0-RC1'
+    def postgresqlDriverVersion = '42.5.1'
     def dbcp2Version = '2.9.0'
     def lang3Version = '3.12.0'
-    def springContextVersion = '6.0.0-RC1'
-    def springMvcVersion = "6.0.0-RC1"
+    def springFrameworkVersion = '6.0.2'
     def hibernateValidatorVersion = '8.0.0.Final'
+    def hibernateCoreVersion = '6.1.5.Final'
     def springJpaVersion = '2.7.5'
+    def securityVersion = '6.0.0'
+    def jsonWebTokenVersion = '0.11.5'
 
     // Use JUnit Jupiter for testing.
 
@@ -65,20 +66,29 @@ dependencies {
 
     implementation group: 'org.springframework',
             name: 'spring-context',
-            version: springContextVersion
+            version: springFrameworkVersion
 
     implementation group: 'org.springframework',
             name: 'spring-orm',
-            version: springContextVersion
+            version: springFrameworkVersion
 
 
     implementation group: 'org.springframework',
             name: 'spring-jdbc',
-            version: springJdbcVersion
+            version: springFrameworkVersion
 
 
-    implementation "org.springframework:spring-webmvc:$springMvcVersion"
+    implementation "org.springframework:spring-webmvc:$springFrameworkVersion"
 
+
+    implementation group: 'org.springframework.security',
+            name: 'spring-security-config',
+            version: securityVersion
+
+
+    implementation group: 'org.springframework.security',
+            name: 'spring-security-web',
+            version: securityVersion
 
     // Drivers
 
@@ -90,9 +100,25 @@ dependencies {
             name: 'hsqldb',
             version: hsqlVersion
 
-    implementation 'org.hibernate:hibernate-core:6.1.5.Final'
+    //
 
-    implementation 'org.springframework.data:spring-data-jpa:2.7.5'
+    implementation "org.hibernate:hibernate-core:$hibernateCoreVersion"
+
+    implementation "org.springframework.data:spring-data-jpa:$springJpaVersion"
+
+    implementation group: 'io.jsonwebtoken',
+            name: 'jjwt-api',
+            version: jsonWebTokenVersion
+
+    implementation group: 'io.jsonwebtoken',
+            name: 'jjwt-impl',
+            version: jsonWebTokenVersion
+
+    implementation group: 'io.jsonwebtoken',
+            name: 'jjwt-jackson',
+            version: jsonWebTokenVersion
+
+
 }
 
 application {
