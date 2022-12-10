@@ -32,10 +32,10 @@ public class ErrorAdvice {
         return "";
     }
 
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public String validate(Exception exception) {
-        return "internal error!";
-    }
+//    @ExceptionHandler
+//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+//    public String validate(Exception exception) {
+//        return exception.getClass().getSimpleName();
+//    }
 
 }

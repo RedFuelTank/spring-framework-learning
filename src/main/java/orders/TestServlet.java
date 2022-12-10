@@ -1,6 +1,6 @@
 package orders;
 
-import database.OrdersRepository;
+import repository.OrdersRepository;
 import model.OrderDto;
 import org.springframework.web.bind.annotation.*;
 

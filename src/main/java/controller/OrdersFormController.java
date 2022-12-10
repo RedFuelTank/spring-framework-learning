@@ -1,6 +1,6 @@
-package orders;
+package controller;
 
-import database.OrdersRepository;
+import repository.OrdersRepository;
 import model.OrderDto;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

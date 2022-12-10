@@ -1,10 +1,9 @@
 package orders;
 
-import database.OrdersRepository;
+import repository.OrdersRepository;
 import exceptions.NotFoundException;
 import jakarta.validation.Valid;
 import model.OrderDto;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
