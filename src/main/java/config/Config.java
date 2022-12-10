@@ -20,11 +20,20 @@ import java.util.Properties;
 @Configuration
 @EnableWebMvc
 @EnableTransactionManagement
-@ComponentScan(basePackages = {"orders", "model", "database", "config", "handlers"})
+@ComponentScan(basePackages = {"orders",
+        "model",
+        "database",
+        "config",
+        "handlers",
+        "controller",
+        "repository"})
 public class Config {
     @Bean
     public EntityManagerFactory getEntityManager(DataSource dataSource, @Qualifier("dialect") String dialect) {
-        ResourceDatabasePopulator populator = new ResourceDatabasePopulator(new ClassPathResource("schema.sql"));
+        ResourceDatabasePopulator populator = new ResourceDatabasePopulator(
+                new ClassPathResource("schema.sql"),
+                new ClassPathResource("user_table_create.sql")
+        );
         populator.execute(dataSource);
 
         LocalContainerEntityManagerFactoryBean manager = new LocalContainerEntityManagerFactoryBean();
